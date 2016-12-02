@@ -2,6 +2,10 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+//控制台日志
+const Dashboard = require('webpack-dashboard');
+const DashboardPlugin = require('webpack-dashboard/plugin');
+const dashboard = new Dashboard();
 
 const config = {
     entry: __dirname + '/src/app/app.js',
@@ -58,7 +62,9 @@ const config = {
         //new ExtractTextPlugin("app.min.css"),           //是否分离CSS和JS文件("[name]-[hash].css")
         new HtmlWebpackPlugin({                         //生成模板文件
             template: __dirname + "/index.tpl.html"
-        })
+        }),
+        new DashboardPlugin(dashboard.setData)             //控制台日志
+
     ]
 };
 
