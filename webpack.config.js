@@ -3,7 +3,6 @@ const Dashboard = require('webpack-dashboard');
 const DashboardPlugin = require('webpack-dashboard/plugin');
 const dashboard = new Dashboard();
 
-
 const config = {
     devtool: 'eval-source-map', //开发环境使用;线上环境请禁用
     entry: __dirname + '/src/app/app.js',
