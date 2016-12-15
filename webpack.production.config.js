@@ -2,37 +2,20 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-//控制台日志
-const Dashboard = require('webpack-dashboard');
-const DashboardPlugin = require('webpack-dashboard/plugin');
-const dashboard = new Dashboard();
 
-const glob = require('glob');
-const path = require('path');
-
-function getEntries (globPath) {
-    var files = glob.sync(globPath);
-    var entries = {}, entry, dirname, basename;
-
-    for (var i = 0; i < files.length; i++) {
-        entry = files[i];
-        dirname = path.dirname(entry);
-        basename = path.basename(entry, '.js');
-        entries[basename] = entry;
-    }
-
-    return entries;
-}
-
-const entries = getEntries(__dirname + '/src/app/*.js');
 
 const config = {
 
-    entry: {},
+    entry: {
+        app: __dirname + '/src/app/app.js',
+        // app2: __dirname + '/src/app/app2.js',     // 多个入口文件打开本选项。
+        vendor:['react','react-dom','react-router']  // 将公共模块打成一个common包，需要在打开CommonsChunkPlugin插件
+    },
 
     output: {
         path: __dirname + '/dist',
-        filename: '[name]/[name].min.js'
+        filename: '[name].min.js',
+        // publicPath:'www.mizlicai.com'         // 启用publicPath,打包出的js、css和img都会添加此前缀，方便打包后将资源传到cdn时，免去修改html资源路径的麻烦。
     },
 
     module: {
@@ -66,7 +49,9 @@ const config = {
         new webpack.DefinePlugin({
             'process.env':{
                 'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-            }
+            },
+            __LOCAL__: false,                               // 本地环境
+            __PRO__:   true,                                //生产环境
         }),
         new CleanWebpackPlugin(['dist'], {
             "root": __dirname,
@@ -80,32 +65,23 @@ const config = {
                 warnings: false                             //不显示warning
             }
         }),
-        // //new ExtractTextPlugin("app.min.css"),           //是否分离CSS和JS文件("[name]-[hash].css")
-        // new HtmlWebpackPlugin({                         //生成模板文件
-        //     template: __dirname + "/index.tpl.html"
+        //new ExtractTextPlugin("app.min.css"),           //是否分离CSS和JS文件("[name]-[hash].css"),如果分离，打出单独的app.min.css包，并且会在模板html的头部插入linkl标签,并且打包出的css会添加publicPath的头前缀。
+        new HtmlWebpackPlugin({                         //生成模板文件
+            template: __dirname + "/index.tpl.html",
+            filename: 'index.html',
+            chunks: ['app', 'vendor'],
+        }),
+        // new HtmlWebpackPlugin({                      //如果要多个入口js打成多个包，并且需要生成多个html文件，复制本段即可。
+        //     template: __dirname + "/index.tpl.html",
+        //     filename: 'index2.html',
+        //     chunks: ['app2', 'vendor'],
         // }),
-        new DashboardPlugin(dashboard.setData)             //控制台日志
+        new webpack.optimize.CommonsChunkPlugin(             //将公共模块打包
+            /* chunkName= */'vendor', 
+            /* filename= */'vendor.js'
+        ),
 
     ]
 };
-
-Object.keys(entries).forEach(function(name) {
-    // 每个页面生成一个entry，如果需要HotUpdate，在这里修改entry
-    config.entry[name] = entries[name];
-
-    // 每个页面生成一个html
-    var plugin = new HtmlWebpackPlugin({
-        // 生成出来的html文件名
-        filename: name + '/' + name + '.html',
-        // 每个html的模版，这里多个页面使用同一个模版
-        template: __dirname + "/index.html",
-        // 自动将引用插入html
-        inject: true,
-        // 每个html引用的js模块，也可以在这里加上vendor等公用模块
-        chunks: [name]
-    });
-
-    config.plugins.push(plugin);
-});
 
 module.exports = config;
