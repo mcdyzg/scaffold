@@ -31,6 +31,7 @@
     "html-webpack-plugin": "^2.24.1",
     "lodash": "~4.16.4",
     "node-sass": "^4.0.0",
+    "open-browser-webpack-plugin": "^0.0.3",
     "postcss-loader": "^1.1.1",
     "react-transform-hmr": "^1.0.4",
     "sass-loader": "^4.0.2",

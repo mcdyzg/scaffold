@@ -19,6 +19,7 @@ class App extends Component {
     render() {
         return (
             <section>
+                哈哈哈哈哈
                 {this.props.children}
             </section>
         )
