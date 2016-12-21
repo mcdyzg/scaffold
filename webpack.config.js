@@ -39,6 +39,11 @@ const config = {
                 test: /\.scss$/,
                 //loader: 'style!css?modules!sass!postcss'
                 loader: 'style!css!sass!postcss'
+            },
+            {
+                test: /\.(png|jpg)$/,
+                //loader: 'style!css?modules!sass!postcss'
+                loader: 'url-loader?limit=8192'
             }
         ]
     },

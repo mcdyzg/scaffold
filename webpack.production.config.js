@@ -38,6 +38,11 @@ const config = {
                 loader: 'style!css!sass!postcss'    //js和scss打包成一个js文件
                 //loader: ExtractTextPlugin.extract('style', 'css!sass!postcss') //js和css分开打包
                 //loader: ExtractTextPlugin.extract('style', 'css?modules!sass!postcss') //js和css分开打包(模块化)
+            },
+            {
+                test: /\.(png|jpg)$/,
+                //loader: 'style!css?modules!sass!postcss'
+                loader: 'url-loader?limit=8192&name=img/[hash:8].[name].[ext]'
             }
         ]
     },
