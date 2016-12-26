@@ -39,3 +39,7 @@
 1.4.0
 
 - 增加reflux，db模块
+- 
+1.5.0
+
+- 增加babel-preset-stage-0，支持class内static属性。
