@@ -1,68 +1,97 @@
+const { resolve } = require('path');
 const webpack = require('webpack');
-const OpenBrowserPlugin = require('open-browser-webpack-plugin')
 
 const config = {
     devtool: 'eval-source-map', //开发环境使用;线上环境请禁用
     entry: {
-        app:__dirname + '/src/app/app.js',
-        app2: __dirname + '/src/app/app2.js',     // 多个入口文件打开本选项。
-        vendor:['react','react-dom','react-router']
+        app:[
+            'react-hot-loader/patch',
+            'webpack-dev-server/client?http://localhost:8081',
+            'webpack/hot/only-dev-server',
+            __dirname + '/src/app/app.js'
+            ]
+        // app2: __dirname + '/src/app/app2.js',     // 多个入口文件打开本选项。
+        // vendor:['react','react-dom','react-router']
     },
     output: {
         path: __dirname + '/dist',
         filename: '[name].js'
     },
-
+    context: resolve(__dirname, 'src'),
     devServer: {
         contentBase: './test',      //本地服务器所加载的页面所在的目录
-        inline: true,               //设置为true，当源文件改变时会自动刷新页面
+        // inline: true,               //设置为true，当源文件改变时会自动刷新页面
         port: 8081,                 //设置默认监听端口，如果省略，默认为8080
         historyApiFallback: true,   //在开发单页应用时非常有用，它依赖于HTML5 history API，如果设置为true，所有的跳转将指向index.html
-        colors: true,               //设置为true，使终端输出的文件为彩色的
         hot: true,                  //是否热部署
-        quiet: false                 //让dev server处于静默的状态启动
+        quiet: false,               //让dev server处于静默的状态启动
+        stats: {
+            colors: true, // color is life
+            chunks: false, // this reduces the amount of stuff I see in my terminal; configure to your needs
+            'errors-only': true
+        }
     },
 
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.js[x]?$/,
-                exclude: /node_modules/,
-                loader: 'babel'
+                use:[
+                    {
+                        loader:'babel-loader'
+                    }
+                ],
+                exclude: /node_modules/
             },
             {
                 test: /\.css$/,
-                //loader: 'style!css?modules!postcss'
-                loader: 'style!css!postcss'
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'postcss-loader'
+                ]
             },
             {
                 test: /\.scss$/,
-                //loader: 'style!css?modules!sass!postcss'
-                loader: 'style!css!sass!postcss'
+                use:[
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader',
+                    'postcss-loader'
+                ]
             },
             {
                 test: /\.(png|jpg)$/,
-                //loader: 'style!css?modules!sass!postcss'
-                loader: 'url-loader?limit=8192'
+                use: [
+                    {
+                        loader:'url-loader',
+                        options:{
+                            limit:8192
+                        }
+                    }
+                ]
             }
         ]
     },
-
-    postcss: [
-        require('autoprefixer')//调用autoprefixer插件
-    ],
+    // 是否监听文件变化，默认false,如果开启web-dev-server,则默认true
+    watch: true,
+    // 运行环境
+    target:'web',
+    // postcss: [
+    //     require('autoprefixer')//调用autoprefixer插件
+    // ],
     plugins: [
-        new OpenBrowserPlugin({ url: 'http://localhost:8081' }), //打包完成后自动打开浏览器
+        new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),           //热加载插件
-        new webpack.NoErrorsPlugin(),                       //允许错误不打断程序
+        new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin({
           __LOCAL__: true,                                  // 本地环境
           __PRO__:   false                                  // 生产环境
         }),
-        new webpack.optimize.CommonsChunkPlugin(            //将公共模块打包
-            /* chunkName= */'vendor', 
-            /* filename= */'vendor.js'
-        ),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name:'vendor',                                  //将公共模块打包
+        //     filename:'vendor.js'
+        // }),
     ]
 };
 

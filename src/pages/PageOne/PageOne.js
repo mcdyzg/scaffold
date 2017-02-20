@@ -18,7 +18,7 @@ class PageOne extends Component {
     	const t = this;
         return (
             <div className="pageOne">
-                <div className="title">这是pageOne~</div>
+                <div className="title">这是pageOne2222~</div>
                 <a href="#/pageTwo">下一页</a>
                 <div className='title'>
                 	{t.state.data && t.state.data.total_count}
