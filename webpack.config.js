@@ -1,20 +1,47 @@
 const { resolve } = require('path');
 const webpack = require('webpack');
 
+const env = process.env.NODE_ENV || 'development';
+const isProd = env === 'production';
+const isDev = !isProd;
+
 const config = {
-    devtool: 'eval-source-map', //开发环境使用;线上环境请禁用
+    devtool: isDev ? 'eval-source-map':'source-map', //开发环境使用;线上环境请禁用
     entry: {
         app:[
             'react-hot-loader/patch',
+            // activate HMR for React
+
             'webpack-dev-server/client?http://localhost:8081',
+            // bundle the client for webpack-dev-server
+            // and connect to the provided endpoint
+
             'webpack/hot/only-dev-server',
-            __dirname + '/src/app/app.js'
-            ]
-        // app2: __dirname + '/src/app/app2.js',     // 多个入口文件打开本选项。
-        // vendor:['react','react-dom','react-router']
+            // bundle the client for hot reloading
+            // only- means to only hot reload for successful updates
+
+            __dirname + '/src/app/app.js',
+            // the entry point of our app
+        ],
+        // app2:[                               // 多个入口文件打开本选项。
+        //     'react-hot-loader/patch',
+        //     // activate HMR for React
+
+        //     'webpack-dev-server/client?http://localhost:8081',
+        //     // bundle the client for webpack-dev-server
+        //     // and connect to the provided endpoint
+
+        //     'webpack/hot/only-dev-server',
+        //     // bundle the client for hot reloading
+        //     // only- means to only hot reload for successful updates
+
+        //     __dirname + '/src/app/app2.js',
+        //     // the entry point of our app
+        // ],
+        vendor:['react','react-dom']
     },
     output: {
-        path: __dirname + '/dist',
+        path: resolve(__dirname, 'dist'),
         filename: '[name].js'
     },
     context: resolve(__dirname, 'src'),
@@ -74,24 +101,21 @@ const config = {
         ]
     },
     // 是否监听文件变化，默认false,如果开启web-dev-server,则默认true
-    watch: true,
+    // watch: true,
     // 运行环境
     target:'web',
-    // postcss: [
-    //     require('autoprefixer')//调用autoprefixer插件
-    // ],
     plugins: [
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),           //热加载插件
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin({
-          __LOCAL__: true,                                  // 本地环境
-          __PRO__:   false                                  // 生产环境
+          __LOCAL__: isDev,                                  // 本地环境
+          __PRO__:   isProd                                  // 生产环境
         }),
-        // new webpack.optimize.CommonsChunkPlugin({
-        //     name:'vendor',                                  //将公共模块打包
-        //     filename:'vendor.js'
-        // }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name:'vendor',                                  //将公共模块打包
+            filename:'vendor.js'
+        }),
     ]
 };
 

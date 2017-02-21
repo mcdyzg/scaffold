@@ -1,11 +1,14 @@
-/**
- * Created by Eugene on 16/11/28.
- */
 import React from 'react'
 import './PageOne.css'
 import {Component} from 'reflux';
 import Action from './action'
 import Store from './store';
+import {
+  Route,
+  Link
+} from 'react-router-dom'
+
+// import App2 from '../../pages/App2'
 
 class PageOne extends Component {
 	constructor(props,context) {
@@ -18,8 +21,8 @@ class PageOne extends Component {
     	const t = this;
         return (
             <div className="pageOne">
-                <div className="title">这是pageOne2222~</div>
-                <a href="#/pageTwo">下一页</a>
+                <div className="title">这是pageOne~</div>
+                <Link to="/pagetwo">下一页</Link>
                 <div className='title'>
                 	{t.state.data && t.state.data.total_count}
                 </div>

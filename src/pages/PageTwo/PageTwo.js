@@ -1,20 +1,14 @@
-/**
- * Created by Eugene on 16/11/28.
- */
 import React, {Component} from 'react'
 import './PageTwo.scss'
+import { Link } from 'react-router-dom'
 //import styles from './PageTwo.scss'
 
 class PageTwo extends Component {
-    //<div className={styles.pageTwo}>
-    //    <div className={styles.title}>这是pageTwo~</div>
-    //    <a href="#/">上一页</a>
-    //</div>
     render() {
         return (
             <div className="pageTwo">
                 <div className="title">这是pageTwo~</div>
-                <a href="#/">上一页</a>
+                <Link to="/">上一页</Link>
             </div>
         )
     }

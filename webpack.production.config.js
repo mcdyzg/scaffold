@@ -1,91 +1,99 @@
+const { resolve } = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const env = process.env.NODE_ENV || 'development';
+const isProd = env === 'production';
+const isDev = !isProd;
 
 const config = {
-
+    // devtool: 'source-map', //开发环境使用;线上环境请禁用
     entry: {
         app: __dirname + '/src/app/app.js',
         // app2: __dirname + '/src/app/app2.js',     // 多个入口文件打开本选项。
-        vendor:['react','react-dom','react-router']  // 将公共模块打成一个common包，需要在打开CommonsChunkPlugin插件
+        vendor:['react','react-dom']
     },
-
     output: {
-        path: __dirname + '/dist',
-        filename: '[name].min.js',
-        // publicPath:'www.mizlicai.com'         // 启用publicPath,打包出的js、css和img都会添加此前缀，方便打包后将资源传到cdn时，免去修改html资源路径的麻烦。
+        path: resolve(__dirname, 'dist'),
+        filename: '[name].min.js'
     },
+    // context: resolve(__dirname, 'src'),
 
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.js[x]?$/,
-                exclude: /node_modules/,
-                loader: 'babel'
+                use:[
+                    {
+                        loader:'babel-loader'
+                    }
+                ],
+                exclude: /node_modules/
             },
             {
                 test: /\.css$/,
-                //loader: 'style!css?modules!postcss' //如果模块化使用
-                loader: 'style!css!postcss'         //js和css打包成一个js文件(需注释插件ExtractTextPlugin)
-                //loader: ExtractTextPlugin.extract('style', 'css!postcss') //js和css分开打包
-                //loader: ExtractTextPlugin.extract('style', 'css?modules!postcss') //js和css分开打包(模块化)
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'postcss-loader'
+                ]
             },
             {
                 test: /\.scss$/,
-                //loader: 'style!css?modules!sass!postcss' //如果模块化使用
-                loader: 'style!css!sass!postcss'    //js和scss打包成一个js文件
-                //loader: ExtractTextPlugin.extract('style', 'css!sass!postcss') //js和css分开打包
-                //loader: ExtractTextPlugin.extract('style', 'css?modules!sass!postcss') //js和css分开打包(模块化)
+                use:[
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader',
+                    'postcss-loader'
+                ]
             },
             {
                 test: /\.(png|jpg)$/,
-                //loader: 'style!css?modules!sass!postcss'
-                loader: 'url-loader?limit=8192&name=img/[hash:8].[name].[ext]'
+                use: [
+                    {
+                        loader:'url-loader',
+                        options:{
+                            limit:8192
+                        }
+                    }
+                ]
             }
         ]
     },
-
-    postcss: [
-        require('autoprefixer') //调用autoprefixer插件
-    ],
+    // 运行环境
+    target:'web',
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env':{
-                'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-            },
-            __LOCAL__: false,                               // 本地环境
-            __PRO__:   true,                                //生产环境
-        }),
         new CleanWebpackPlugin(['dist'], {
             "root": __dirname,
             verbose: true,
             dry: false
         }),
-        new webpack.BannerPlugin("Copyright Mizlc inc."),   //打包文件抬头
-        //new webpack.optimize.OccurenceOrderPlugin(),        //为组件分配ID，通过这个插件webpack可以分析和优先考虑使用最多的模块，并为它们分配最小的ID
-        new webpack.optimize.UglifyJsPlugin({               //压缩JS代码
-            compress: {
-                warnings: false                             //不显示warning
-            }
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV),//使react引用production版本而不是development版本
+            },
+            __LOCAL__: isDev,                                  // 本地环境
+            __PRO__:   isProd                                  // 生产环境
         }),
-        //new ExtractTextPlugin("app.min.css"),           //是否分离CSS和JS文件("[name]-[hash].css"),如果分离，打出单独的app.min.css包，并且会在模板html的头部插入linkl标签,并且打包出的css会添加publicPath的头前缀。
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+              warnings: false
+            },
+            output: {
+              comments: false
+            },
+            sourceMap: true
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name:'vendor',                                  //将公共模块打包
+            filename:'vendor.js'
+        }),
         new HtmlWebpackPlugin({                         //生成模板文件
             template: __dirname + "/index.tpl.html",
             filename: 'index.html',
             chunks: ['app', 'vendor'],
         }),
-        // new HtmlWebpackPlugin({                      //如果要多个入口js打成多个包，并且需要生成多个html文件，复制本段即可。
-        //     template: __dirname + "/index.tpl.html",
-        //     filename: 'index2.html',
-        //     chunks: ['app2', 'vendor'],
-        // }),
-        new webpack.optimize.CommonsChunkPlugin(             //将公共模块打包
-            /* chunkName= */'vendor', 
-            /* filename= */'vendor.js'
-        ),
-
     ]
 };
 

@@ -1,36 +1,20 @@
-/**
- * Created by Eugene on 16/11/28.
- */
 "use strict";
 //基本组件
-import React,{Component} from  'react'
-import ReactDOM from 'react-dom'
-import {Router,hashHistory} from 'react-router'
 
-//demo
-import PageOne from '../pages/PageOne'
-import PageTwo from '../pages/PageTwo'
+import { AppContainer } from 'react-hot-loader';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App2 from '../pages/App2'
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-    }
+const rootEl = document.getElementById('app');
+const render = Component =>
+  ReactDOM.render(
+    <AppContainer>
+      	<Component />
+    </AppContainer>,
+    rootEl
+  );
 
-    render() {
-        return (
-            <section>
-                哈哈哈哈哈
-                {this.props.children}
-            </section>
-        )
-    }
-}
-const routes = {
-    path: '/',
-    component: App,
-    indexRoute: {component: PageOne},
-    childRoutes: [
-        {path: '/pageTwo', component: PageTwo}
-    ]
-};
-ReactDOM.render(<Router history={hashHistory} routes={routes}/>, document.getElementById('app'));
+render(App2);
+if (module.hot) module.hot.accept('../pages/App2', () => render(App2));
+
