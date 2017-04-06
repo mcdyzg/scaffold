@@ -30,4 +30,12 @@ class PageOne extends Component {
         )
     }
 }
+
+// const PageOne = (match) =>{
+//     return (
+//         <div className=''>
+//             adsfsd
+//         </div>
+//         )
+// }
 export default PageOne
