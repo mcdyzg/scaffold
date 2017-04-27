@@ -4,12 +4,12 @@ import DBF from './dbFactory';
 // 开发环境
 let urlPrefix;
 if (__LOCAL__) {   
-    urlPrefix = '//api.github.com/';
+    urlPrefix = 'https://api.github.com/';
 }
 
 // 生产环境
 if (__PRO__) {  
-    urlPrefix = '//api.github.com/';
+    urlPrefix = 'https://api.github.com/';
     
 }
 
