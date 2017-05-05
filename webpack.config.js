@@ -1,5 +1,6 @@
 const { resolve } = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const env = process.env.NODE_ENV || 'development';
 const isProd = env === 'production';
@@ -42,7 +43,8 @@ const config = {
     },
     output: {
         path: resolve(__dirname, 'dist'),
-        filename: '[name].js'
+        filename: '[name].[chunkhash:8].sync.js',
+        chunkFilename: '[name]-[id].[chunkhash:8].bundle.js',
     },
     context: resolve(__dirname, 'src'),
     devServer: {
@@ -115,6 +117,11 @@ const config = {
         new webpack.optimize.CommonsChunkPlugin({
             name:'vendor',                                  //将公共模块打包
             filename:'vendor.js'
+        }),
+        new HtmlWebpackPlugin({                         //生成模板文件
+            template: __dirname + "/index.tpl.html",
+            filename: 'index.html',
+            chunks: ['app', 'vendor'],
         }),
     ]
 };

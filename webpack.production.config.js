@@ -16,7 +16,8 @@ const config = {
     },
     output: {
         path: resolve(__dirname, 'dist'),
-        filename: '[name].min.js'
+        filename: '[name].[chunkhash:8].sync.min.js',
+        chunkFilename: '[name]-[id].[chunkhash:8].bundle.min.js',
     },
     // context: resolve(__dirname, 'src'),
 
