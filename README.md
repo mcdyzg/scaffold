@@ -47,3 +47,7 @@
 2.0.0
 
 - 升级到webpack2, react-router升级到4.0版本, 使用react-hot-loader代替hmr实现热加载。
+
+2.1.0
+
+- 使用异步加载
