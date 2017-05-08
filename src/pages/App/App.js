@@ -8,25 +8,20 @@ import {
 
 import PageOne from 'bundle-loader?lazy&name=app-p1!../../pages/PageOne'
 import PageTwo from 'bundle-loader?lazy&name=app-p2!../../pages/PageTwo'
-import Bundle from '../../modules/bundle'
+import Bundle from '../../modules/Bundle'
 
-const Page1 = () => (
-    <Bundle load={PageOne}>
-        {(List) => <List />}
-    </Bundle>
-)
-const Page2 = () => (
-    <Bundle load={PageTwo}>
-        {(List) => <List />}
-    </Bundle>
-)
-// const Page2 = () => {
-//   <Bundle load={PageTwo}>
-// 	{
-// 	  	(comp)=><comp />
-// 	}
-//   </Bundle>
-// }
+const Page1 = Bundle(PageOne)
+const Page2 = Bundle(PageTwo)
+// const Page1 = () => (
+//     <Bundle load={PageOne}>
+//         {(List) => <List />}
+//     </Bundle>
+// )
+// const Page2 = () => (
+//     <Bundle load={PageTwo}>
+//         {(List) => <List />}
+//     </Bundle>
+// )
 
 class App extends Component {
 	constructor(props,context) {
