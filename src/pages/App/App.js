@@ -5,6 +5,8 @@ import {
   Route,
   Link
 } from 'react-router-dom'
+import store from '../../store/index.js'
+import { Provider } from 'react-redux'
 
 import PageOne from 'bundle-loader?lazy&name=app-p1!../../pages/PageOne'
 import PageTwo from 'bundle-loader?lazy&name=app-p2!../../pages/PageTwo'
@@ -31,12 +33,14 @@ class App extends Component {
 	render() {
 		const t = this;
 		return (
-			<Router>
-				<div className=''>
-					<Route exact path="/" component={Page1}/>
-					<Route path="/pagetwo" component={Page2}/>
-				</div>
-			</Router>
+			<Provider store={store} >
+				<Router>
+					<div className=''>
+						<Route exact path="/" component={Page1}/>
+						<Route path="/pagetwo" component={Page2}/>
+					</div>
+				</Router>
+			</Provider>
 		)
 	}
 }
