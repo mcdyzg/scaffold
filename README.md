@@ -59,3 +59,7 @@
 3.0.0
 
 - 增加redux，删除reflux
+
+3.0.1
+
+- 修改package.json错误

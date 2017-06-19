@@ -20,16 +20,16 @@ class PageOne extends Component {
 
 	render() {
 		const t = this;
-		return ( 
+		return (
 			<div className = "pageOne" >
-				<div className = "title" > 这是pageOne~ </div> 
-				<Link to = "/pagetwo" > 下一页 </Link> 
+				<div className = "title" > 这是pageOne~ </div>
+				<Link to = "/pagetwo" > 下一页 </Link>
 
 
-				<div className = 'title' > { t.props.user } </div> 
+				<div className = 'title' > { t.props.user } </div>
 				<div onClick = { this.props.onIncreaseClick } >
 					点击调用add 
-				</div> 
+				</div>
 				<br /><br /><br />
 
 

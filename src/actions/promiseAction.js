@@ -64,8 +64,22 @@ export const promiseAction5 = ({ name }) => {
 		let data = await DB.Test.getData({
         	q:name
         })
-        
+
 		dispatch(promiseAction2({name:data.total_count}))
+	}
+}
+export const promiseAction6 = ({ name }) => {
+	return async (dispatch, getState)=>{
+		dispatch(promiseAction({find:{type:'haha',rate:'hehe'}}))
+
+		// 因为promiseAction2是个异步的action,所以如果想下面的请求等待promiseAction2完成后再执行的话，需要加await,如果不加，那么上下两次的请求会同时发
+		await dispatch(promiseAction2({name:data.total_count}))
+
+		let data = await DB.Test.getData({
+        	q:name
+        })
+
+
 	}
 }
 	// const loginDone = (userData) => ({
@@ -113,7 +127,7 @@ export const promiseAction5 = ({ name }) => {
 //   return dispatch => {
 //     userService
 //       .logout()
-//       .then(() => 
+//       .then(() =>
 //         dispatch({
 //           type: LOG_OUT
 //         })
