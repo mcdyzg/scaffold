@@ -8,17 +8,17 @@ export default createStore({
 
     init() {
         this.state = {
-            
+            data2:{}
         };
     },
 
-    onGetData(name) {
+    onGetData2(name) {
         const t = this;
         DB.Test.getData({
         	q:name
         }).then(function (data) {
             if(data){
-                t.state.data = data;
+                t.state.data2 = data;
             }
             t.updateComponent();
         });

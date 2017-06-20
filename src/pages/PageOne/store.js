@@ -8,7 +8,7 @@ export default createStore({
 
     init() {
         this.state = {
-            
+            data:{}
         };
     },
 

@@ -3,6 +3,7 @@ import './PageOne.css'
 import {Component} from 'reflux';
 import Action from './action'
 import Store from './store';
+import Store2 from '../PageTwo/store'
 import {
   Route,
   Link
@@ -13,12 +14,14 @@ import {
 class PageOne extends Component {
 	constructor(props,context) {
 		super(props,context)
-        this.store = Store;
+        this.state = {};
+        this.stores = [Store,Store2];
         Action.getData('laowang')
 	}
 
     render() {
     	const t = this;
+        console.log(this.state)
         return (
             <div className="pageOne">
                 <div className="title">这是pageOne~</div>

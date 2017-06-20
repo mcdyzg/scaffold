@@ -39,7 +39,7 @@
 1.4.0
 
 - 增加reflux，db模块
-- 
+-
 1.5.0
 
 - 增加babel-preset-stage-0，支持class内static属性。
@@ -55,3 +55,7 @@
 2.1.1
 
 - 将node包更新到最新版
+
+2.2.0
+
+- 更新store用法，每个模块里均有一个store,其他模块想用到本模块的数据，只需import store即可
