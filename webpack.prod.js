@@ -8,7 +8,6 @@ const happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
 module.exports = {
     entry: {
         app: [
-            'react-hot-loader/patch',
             './src/app/app.js'
         ],
         vendor:['react','react-dom','react-router-dom'],
@@ -68,26 +67,6 @@ module.exports = {
     watchOptions:{
         ignored: /node_modules/,
     },
-    devServer: {
-        host:'0.0.0.0',
-        port: 8084,                 //设置默认监听端口，如果省略，默认为8080
-        historyApiFallback: true,   //在开发单页应用时非常有用，它依赖于HTML5 history API，如果设置为true，所有的跳转将指向index.html
-        hot: true,                  //是否热部署
-        quiet: false,               //让dev server处于静默的状态启动
-        contentBase:'./test',
-        stats: {
-            colors: true, // color is life
-            chunks: false, // this reduces the amount of stuff I see in my terminal; configure to your needs
-            'errors-only': true
-        },
-
-        // proxy: {
-        //     "/api": {
-        //         target: "http://localhost:6061",
-        //         // pathRewrite: {"^/api" : ""}
-        //     }
-        // }
-    },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
             name:'vendor',                                  //将公共模块打包
@@ -96,15 +75,24 @@ module.exports = {
         new HappyPack({id: 'jsx', threadPool: happyThreadPool, loaders: ['babel-loader']}),
         new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: '"development"'
+                NODE_ENV: '"production"'
             },
-            __LOCAL__: true,
-            __PRO__: false
+            __LOCAL__: false,
+            __PRO__: true
         }),
         new HtmlWebpackPlugin({                         //生成模板文件
             template: './test/index.html',
             filename: 'index.html',
             chunks: ['app','vendor'],
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true,
+            compress: {
+                warnings: false,
+                drop_console: true
+            },
+            beautify:false,
+            comments:false
         }),
     ]
 }

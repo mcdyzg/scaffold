@@ -1,101 +1,61 @@
-import _assign from 'lodash/assign'
-import _map from 'lodash/map'
+// import os from 'object-serialize'
+import param from 'object-param'
 
-let DBF = {
-    __: {},
-
-    set(key, value) {
-        this.__[key] = value;
-    },
-    get(key) {
-        return this.__[key];
-    },
+export default new class {
+    constructor() {
+        this.map = new Map();
+    }
     create(name, methods) {
-        if (this.context[name]) {
-            console.warn('DB: "' + name + '" is existed! ');
-            return;
+        return this.context[name] = this.DB(methods);
+    }
+    set(key, value) {
+        this.map.set(key, value);
+    }
+    get(key) {
+        return this.map.get(key);
+    }
+    context() {
+        this.link = data => this.context.Data = data;
+    }
+    DB(methods) {
+        for (let method in methods) {
+            const config = methods[method];
+            this[method] = query => new Request(config, query, method);
         }
-        this.context[name] = new DB(methods);
-    },
-    context: {
-        link: data => this.context.Data = data,
-        Data: {}
+        return this;
     }
 }
 
-class DB {
-    constructor(methods) {
-        _map(methods, (config, method) => this[method] = query => {
-            let cfg = _assign({},config);
-            // cfg.jsonp = config.jsonp || false;
-            this.urlPrefix = DBF.get('urlPrefix') || '';
-            cfg.url = this.getUrl(config.url)
-            // query._csrf = localStorage.getItem('csrfToken') || '';
-            return new request(cfg, query)
-        });
-    }
-    getUrl(url){
-        if (this.urlPrefix) {
-            return this.urlPrefix + url;
-        } else {
-            return url;
-        }
-    }
-}
+function Request(config,body) {
 
-class request {
-    constructor(config, querys) {
-        return new Promise((resolve, reject) => {
+    let {url,method = ''} = config;
+    const option = {
+      credentials: 'same-origin',
+    };
+    if(method.toUpperCase() === 'POST'){
+      Object.assign(option, {
+          headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/x-www-form-urlencoded"
+          },
+          method: 'post',
+          body: param(body)
+      })
+    }else{
+      url += `?${param(body)}`
+    }
 
-            // 使用fetch,有时会出现后台显示请求成功，前台请求不成功，所以换成superagent,暂时没发现问题
-            let temData = '';
-            let temConfig = {
-                method : config.type,
-                // credentials:config.credentials || 'same-origin',
-                headers: {
-                    "Accept": "application/json",
-                    // 'Content-Type': config.contentType || 'application/json;charset=UTF-8',
-                    "Content-Type": config.contentType || "application/x-www-form-urlencoded"
-                },
-            };
-            if(config.type === 'GET'){
-                _map(querys,(value,name)=>{
-                    temData += `${name}=${value}&`
-                })
-            }else if(config.type === 'POST'){
-                temConfig.body = JSON.stringify(querys);
-            }
-            fetch(`${config.url}${config.type==='GET'?'?'+temData:''}`,temConfig)
-            .then((res)=>{return res.json()},(err)=>{
+    return new Promise((resolve, reject) => {
+        fetch(url, option).then(data => data.json()).then(({success,data,...err}) => {
+            if (success) {
+                resolve(data)
+            } else {
                 reject({
-                    status: '404',
-                    msg:'请求失败，请稍后重试',
-                    err:err,
+                  success,data,...err
                 })
-            })
-            .then((res)=>{
-                resolve(DBF.get('defaultParsePesp')(res))
-            })
-
-            // $.ajax({
-            //     url: config.url,
-            //     type: config.type,
-            //     data: querys,
-            //     dataType:'json'
-            // })
-            // .done(resp => {
-            //     let parseRespFunc = DBF.get('defaultParsePesp') || function(){};
-            //     let data = parseRespFunc(resp);
-            //     if(data){
-            //         resolve(data)
-            //     }else{
-            //         reject(resp)
-            //     }
-            // })
-
-            
-        })
-    }
+            }
+        }).catch(()=>reject({
+          errorMsg:'请求失败',
+        }))
+    })
 }
-
-export default DBF

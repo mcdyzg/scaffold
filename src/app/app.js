@@ -1,20 +1,17 @@
-"use strict";
-//基本组件
+import React from 'react'
+import {render} from 'react-dom'
+import {AppContainer} from 'react-hot-loader'
+import Home from '@pages/Home'
 
-import { AppContainer } from 'react-hot-loader';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from '../pages/App'
+const renders = Component => {
+    render(
+        <AppContainer>
+            <Component/>
+        </AppContainer>, document.getElementById('app'))
+}
 
-const rootEl = document.getElementById('app');
-const render = Component =>
-  ReactDOM.render(
-    <AppContainer>
-      	<Component />
-    </AppContainer>,
-    rootEl
-  );
+renders(Home)
 
-render(App);
-if (module.hot) module.hot.accept('../pages/App', () => render(App));
-
+if (module.hot) {
+    module.hot.accept('@pages/Home', () => renders(Home))
+}

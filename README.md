@@ -56,6 +56,10 @@
 
 - 将node包更新到最新版
 
+2.2.0
+
+- 更新reflux用法，作为reflux分支一直保存
+
 3.0.0
 
 - 增加redux，删除reflux
@@ -63,3 +67,7 @@
 3.0.1
 
 - 修改package.json错误
+
+4.0.0
+
+- 使用react-hot-loader 3.0.0,重新组织。

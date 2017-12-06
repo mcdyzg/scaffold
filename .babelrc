@@ -1,19 +1,31 @@
 {
-  "presets": [
-    ["es2015", {"modules": false}],
-    // webpack understands the native import syntax, and uses it for tree shaking
-
-    "stage-0",
-    // Specifies what level of language features to activate.
-    // Stage 2 is "draft", 4 is finished, 0 is strawman.
-    // See https://tc39.github.io/process-document/
-
-    "react"
-    // Transpile React components to JavaScript
-  ],
-  "plugins": [
-    "react-hot-loader/babel",
-    "transform-runtime"
-    // Enables React code to work with HMR.
-  ]
+    "presets": [
+        ["es2015", {
+            "modules": false,
+            "loose": true
+        }], "react", "stage-0"
+    ],
+    "env": {
+        "development": {
+            "plugins": ["react-hot-loader/babel"]
+        }
+    },
+    "ignore": [
+        "jquery.js",
+        "jquery.min.js",
+        "angular.js",
+        "angular.min.js",
+        "react.js",
+        "react.min.js",
+        "react-dom.js",
+        "react-dom.min.js"
+    ],
+    "plugins": [
+        ["transform-runtime", {
+            "helpers": false,
+            "polyfill": false,
+            "regenerator": true,
+            "moduleName": "babel-runtime"
+        }],
+    ]
 }
