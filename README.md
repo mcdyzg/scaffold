@@ -39,7 +39,7 @@
 1.4.0
 
 - 增加reflux，db模块
-- 
+-
 1.5.0
 
 - 增加babel-preset-stage-0，支持class内static属性。
@@ -71,3 +71,9 @@
 4.0.0
 
 - 使用react-hot-loader 3.0.0,重新组织。
+
+4.0.1
+
+  1. 更新包版本
+  2. 使用babel-preset-env
+  3. webpack-dev-server 2.10.0使用yarn安装报错，强制使用2.9.7版本

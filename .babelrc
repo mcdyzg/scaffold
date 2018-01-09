@@ -1,26 +1,19 @@
 {
     "presets": [
-        ["es2015", {
-            "modules": false,
-            "loose": true
-        }], "react", "stage-0"
+        ["env", {
+            "modules": false
+        }],
+        "react",
+        // for arrow function
+        "stage-0"
     ],
     "env": {
         "development": {
             "plugins": ["react-hot-loader/babel"]
         }
     },
-    "ignore": [
-        "jquery.js",
-        "jquery.min.js",
-        "angular.js",
-        "angular.min.js",
-        "react.js",
-        "react.min.js",
-        "react-dom.js",
-        "react-dom.min.js"
-    ],
     "plugins": [
+        // for async/await
         ["transform-runtime", {
             "helpers": false,
             "polyfill": false,
