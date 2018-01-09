@@ -48,6 +48,14 @@ module.exports = {
                     'sass-loader'
                 ]
             }, {
+                test: /\.less$/,
+                use:[
+                    'style-loader',
+                    'css-loader',
+                    'postcss-loader',
+                    'less-loader'
+                ]
+            }, {
                 test: /\.(png|jpg|gif|svg)$/,
                 use: [
                 {
@@ -81,7 +89,7 @@ module.exports = {
             __PRO__: false
         }),
         new HtmlWebpackPlugin({                         //生成模板文件
-            template: './test/index.html',
+            template: './index.html',
             filename: 'index.html',
             chunks: ['app','vendor'],
         }),

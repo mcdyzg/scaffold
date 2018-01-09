@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const os = require('os')
 const HappyPack = require('happypack');
 const happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
+const AutoDllPlugin = require('autodll-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -11,13 +12,17 @@ module.exports = {
             'react-hot-loader/patch',
             './src/app/app.js'
         ],
-        vendor:['react','react-dom','react-router-dom'],
+        app2: [
+            'react-hot-loader/patch',
+            './src/app/app2.js'
+        ],
+        // vendor:['react','react-dom','react-router-dom'],
     },
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: '[name].js',
         chunkFilename: '[name].[hash].js',
-        publicPath:''
+        // publicPath:'/'
     },
     resolve: {
         extensions: [
@@ -49,6 +54,14 @@ module.exports = {
                     'sass-loader'
                 ]
             }, {
+                test: /\.less$/,
+                use:[
+                    'style-loader',
+                    'css-loader',
+                    'postcss-loader',
+                    'less-loader'
+                ]
+            }, {
                 test: /\.(png|jpg|gif|svg)$/,
                 use: [
                 {
@@ -74,7 +87,7 @@ module.exports = {
         historyApiFallback: true,   //在开发单页应用时非常有用，它依赖于HTML5 history API，如果设置为true，所有的跳转将指向index.html
         hot: true,                  //是否热部署
         quiet: false,               //让dev server处于静默的状态启动
-        contentBase:'./test',
+        // contentBase:'./test',
         stats: {
             colors: true, // color is life
             chunks: false, // this reduces the amount of stuff I see in my terminal; configure to your needs
@@ -83,16 +96,16 @@ module.exports = {
 
         // proxy: {
         //     "/api": {
-        //         target: "http://localhost:6061",
+        //         target: "https://api.github.com/users",
         //         // pathRewrite: {"^/api" : ""}
         //     }
         // }
     },
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin({
-            name:'vendor',                                  //将公共模块打包
-            // filename:'vendor.js'
-        }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name:'vendor',                                  //将公共模块打包
+        //     // filename:'vendor.js'
+        // }),
         new HappyPack({id: 'jsx', threadPool: happyThreadPool, loaders: ['babel-loader']}),
         new webpack.DefinePlugin({
             'process.env': {
@@ -102,9 +115,35 @@ module.exports = {
             __PRO__: false
         }),
         new HtmlWebpackPlugin({                         //生成模板文件
-            template: './test/index.html',
+            template: './index.html',
             filename: 'index.html',
             chunks: ['app','vendor'],
+            // manifest:'dist/static/common-1.0.0.js',
         }),
+        // new webpack.DllReferencePlugin({
+        //     // context: __dirname,
+        //     manifest: require('./dist/static/common.manifest.json'),
+        //     // name:'dll'
+        // }),
+        new AutoDllPlugin({
+            inject: true, // will inject the DLL bundle to index.html
+            debug: true,
+            filename: '[name]-1.0.0.js',
+            path: './dist/static',
+            plugins:[
+                new webpack.DefinePlugin({
+                    'process.env': {
+                        NODE_ENV: '"development"'
+                    },
+                }),
+            ],
+            entry: {
+                vendor: [
+                'react',
+                'react-dom',
+                'react-router-dom',
+                ]
+            }
+        })
     ]
 }

@@ -1,9 +1,8 @@
 import React, {Component} from 'react'
-import './List.scss'
-import {withRouter} from 'react-router-dom'
+import './List2.scss'
 import { Button } from 'antd'
 
-class List extends Component {
+class List2 extends Component {
 	constructor(props) {
         super(props);
 
@@ -15,9 +14,9 @@ class List extends Component {
 	render() {
 		return (
 		<div className=''>
-			aaaa2
-			<Button type="primary">Primary</Button>
+			aaaa21
+			<Button type="primary">hahaha</Button>
 		</div>)
 	}
 }
-export default withRouter(List)
+export default (List2)

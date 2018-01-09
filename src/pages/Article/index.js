@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {withRouter,Route,NavLink,Switch} from 'react-router-dom'
 import Bundle from '@modules/Bundle'
 
-import ListC from 'bundle-loader?lazy&name=app-article-wrap!./List';
+import ListC from 'bundle-loader?lazy&name=app-list!./List';
 // const List = Bundle(ListC)
 
 const List = Bundle(ListC)

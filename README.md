@@ -77,3 +77,72 @@
   1. 更新包版本
   2. 使用babel-preset-env
   3. webpack-dev-server 2.10.0使用yarn安装报错，强制使用2.9.7版本
+
+打包详解->
+
+## 开启组件异步加载(List组件)
+
+### 不使用antd时：
+
+    app.js->15k
+    app-list->1.5k
+    vendor.js->150k(包含react,react-dom,react-router-dom)
+
+### 使用antd按需引入时:
+
+1. 只在List组件里使用Button组件
+
+        app.js->15k
+        app-list->99k
+        vendor.js->150k
+
+2. 只在Home组件里使用Button组件
+
+        app.js->113k
+        app-list->1.5k
+        vendor.js->150k
+
+3. Home和List组件都使用Button组件
+
+        app.js->113k
+        app-list->1.63k
+        vendor.js->150k
+
+结论：可以看出antd配合异步加载不会带来重复打包
+
+### 将antd打入vendor，同时开启antd按需引入:
+
+    app.js->94k
+    app-list->1.64k
+    vendor.js->1.38M !!!
+
+结论：也就是说完整的antd被打入vendor，而且按需引用的时候又打包了一次
+
+### 将antd打入vendor，同时关闭antd按需引入:
+
+    app.js->15.2k
+    app-list->1.61k
+    vendor.js->1.38M !!!
+
+结论：完整的antd被打入vendor，按需引用Button的时候虽然没有重复打包，但是我们强烈需要按需引入，毕竟antd 990k大。
+
+### 开启dll打包(react,react-dom,react-router-dom)，开启antd按需引用，antd不打入vendor
+
+    app.js->113k
+    app-list->1.61k
+    vendor.js->1.6k
+    common-1.0.0.js->161k
+
+结论：也就是说vendor被打进了common里，但是antd按需引用的部分还是重复打包了,此种情况也就是说可以省掉commonChunk组件打react,react-dom,react-router-dom的步骤了。
+
+### 增加多入口(app.js app2.js),关闭commonChunk插件，开启dll,开启antd按需引用
+
+    app.js->114k(使用Button组件)
+    app2.js->4.88k(未使用Button组件)
+    app-list->1.63k(使用Button组件)
+    app-list2->105k(使用Button组件)
+    common-1.0.0.js->161k
+
+### 项目复制一个，然后打包，发现commin-1.0.0.js通用，故取消commonChunks插件
+
+### 使用AutoDllPlugin插件，避免新建一个打dll包的webpack config文件

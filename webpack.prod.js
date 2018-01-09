@@ -4,13 +4,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const os = require('os')
 const HappyPack = require('happypack');
 const happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
+const AutoDllPlugin = require('autodll-webpack-plugin');
 
 module.exports = {
     entry: {
         app: [
             './src/app/app.js'
         ],
-        vendor:['react','react-dom','react-router-dom'],
+        // app2: [
+        //     './src/app/app2.js'
+        // ],
+        // vendor:['react','react-dom','react-router-dom'],
     },
     output: {
         path: path.resolve(__dirname, './dist'),
@@ -48,6 +52,14 @@ module.exports = {
                     'sass-loader'
                 ]
             }, {
+                test: /\.less$/,
+                use:[
+                    'style-loader',
+                    'css-loader',
+                    'postcss-loader',
+                    'less-loader'
+                ]
+            }, {
                 test: /\.(png|jpg|gif|svg)$/,
                 use: [
                 {
@@ -67,11 +79,13 @@ module.exports = {
     watchOptions:{
         ignored: /node_modules/,
     },
+    // 会生成.map文件
+    // devtool: 'source-map',
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin({
-            name:'vendor',                                  //将公共模块打包
-            // filename:'vendor.js'
-        }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name:'vendor',                                  //将公共模块打包
+        //     // filename:'vendor.js'
+        // }),
         new HappyPack({id: 'jsx', threadPool: happyThreadPool, loaders: ['babel-loader']}),
         new webpack.DefinePlugin({
             'process.env': {
@@ -81,9 +95,10 @@ module.exports = {
             __PRO__: true
         }),
         new HtmlWebpackPlugin({                         //生成模板文件
-            template: './test/index.html',
+            template: './index.html',
             filename: 'index.html',
             chunks: ['app','vendor'],
+            // manifest:'static/common-1.0.0.js',
         }),
         new webpack.optimize.UglifyJsPlugin({
             sourceMap: true,
@@ -94,5 +109,32 @@ module.exports = {
             beautify:false,
             comments:false
         }),
+        // new webpack.DllReferencePlugin({
+        //     // context: __dirname,
+        //     manifest: require('./dist/static/common.manifest.json'),
+        //     // name:'dll'
+        // }),
+        new AutoDllPlugin({
+            inject: true, // will inject the DLL bundle to index.html
+            debug: true,
+            filename: '[name]-1.0.0.js',
+            path: './dist/static',
+            plugins: [
+                new webpack.optimize.UglifyJsPlugin(),
+                // 如果不适用本插件，react将会打development环境的包
+                new webpack.DefinePlugin({
+                    'process.env': {
+                        NODE_ENV: '"production"'
+                    },
+                }),
+            ],
+            entry: {
+                vendor: [
+                'react',
+                'react-dom',
+                'react-router-dom',
+                ]
+            }
+        })
     ]
 }

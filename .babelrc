@@ -12,7 +12,10 @@
             "plugins": ["react-hot-loader/babel"]
         }
     },
-    "plugins": [
+    "plugins": [["import", {
+          "libraryName": "antd",
+          "style": true,
+        }],
         // for async/await
         ["transform-runtime", {
             "helpers": false,
