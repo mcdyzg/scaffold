@@ -124,16 +124,16 @@
     app-list->1.61k
     vendor.js->1.38M !!!
 
-结论：完整的antd被打入vendor，按需引用Button的时候虽然没有重复打包，但是我们强烈需要按需引入，毕竟antd 990k大。
+结论：完整的antd被打入vendor，引用Button的时候虽然没有重复打包，但是我们强烈需要按需引入，毕竟antd 990k大。
 
-### 开启dll打包(react,react-dom,react-router-dom)，开启antd按需引用，antd不打入vendor
+### 开启dll打包(react,react-dom,react-router-dom)，开启commonChunk(react,react-dom,react-router-dom),开启antd按需引用，antd不打入vendor
 
     app.js->113k
     app-list->1.61k
     vendor.js->1.6k
     common-1.0.0.js->161k
 
-结论：也就是说vendor被打进了common里，但是antd按需引用的部分还是重复打包了,此种情况也就是说可以省掉commonChunk组件打react,react-dom,react-router-dom的步骤了。
+结论：也就是说vendor被打进了common里，antd没有重复打包,此种情况也就是说可以省掉commonChunk组件打react,react-dom,react-router-dom的步骤了。
 
 ### 增加多入口(app.js app2.js),关闭commonChunk插件，开启dll,开启antd按需引用
 
@@ -145,4 +145,20 @@
 
 ### 项目复制一个，然后打包，发现commin-1.0.0.js通用，故取消commonChunks插件
 
-### 使用AutoDllPlugin插件，避免新建一个打dll包的webpack config文件
+### 使用webpack的externals属性，将react,react-dom,react-router-dom通过script引入，不使用antd任何组件
+
+    app.js->12.4k(不使用Button组件)
+
+### 使用webpack的externals属性，将react,react-dom,react-router-dom通过script引入，使用antd Button组件
+
+    app.js->115.k(使用Button组件)
+    app-list->1.63k(使用Button组件)
+
+### 使用webpack的externals属性，将react,react-dom,react-router-dom,antd通过script引入，使用antd Button组件
+
+    app.js->16.6k(使用Button组件)
+    app-list->1.61k(使用Button组件)
+
+结论：此种方法成功把antd剥离出去了，但是html里需要引入antd.min.js和antd.min.css和moment.min.js！！！，moment.min.js必须放在antd之前，否则会报错。同时，.babelrc文件里需要去掉babel-plugin-import的使用，如果不去掉，app.js会有115k，也就是说antd的Button组件还是被打进了app.js里。
+
+## 综上：使用AutoDllPlugin插件，避免新建一个打dll包的webpack config文件最好，使用commonChunk插件也不错，只不过不能多项目通用vendor.js。使用extarnals无法使用按需加载，所以加载最慢

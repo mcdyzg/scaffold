@@ -24,6 +24,7 @@ module.exports = {
         chunkFilename: '[name].[hash].js',
         // publicPath:'/'
     },
+    // devtool: 'inline-source-map',
     resolve: {
         extensions: [
             ".js", ".jsx"
@@ -76,6 +77,13 @@ module.exports = {
             },
         ]
     },
+    // 使用externals html里需手动引入一下js，特别注意：还需额外引入moment.js，并放在antd之前，否则会报错
+    // externals:{
+    //     'react':'React',
+    //     'react-dom':'ReactDOM',
+    //     'react-router-dom':'ReactRouterDOM',
+    //     'antd':'antd',
+    // },
     // webpack 可以监听文件变化，当它们修改后会重新编译。这个页面介绍了如何启用这个功能，以及当 watch 无法正常运行的时候你可以做的一些调整。
     watch: true,
     watchOptions:{
@@ -138,7 +146,7 @@ module.exports = {
                 }),
             ],
             entry: {
-                vendor: [
+                common: [
                 'react',
                 'react-dom',
                 'react-router-dom',
