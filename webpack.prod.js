@@ -128,7 +128,7 @@ module.exports = {
             path: './dist/static',
             plugins: [
                 new webpack.optimize.UglifyJsPlugin(),
-                // 如果不适用本插件，react将会打development环境的包
+                // 如果不使用本插件，react将会打development环境的包
                 new webpack.DefinePlugin({
                     'process.env': {
                         NODE_ENV: '"production"'

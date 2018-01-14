@@ -74,9 +74,18 @@
 
 4.0.1
 
-  1. 更新包版本
-  2. 使用babel-preset-env
-  3. webpack-dev-server 2.10.0使用yarn安装报错，强制使用2.9.7版本
+1. 更新包版本
+2. 使用babel-preset-env
+3. webpack-dev-server 2.10.0使用yarn安装报错，强制使用2.9.7版本
+
+4.1.0
+
+- 使用dll打包
+
+4.1.1
+
+1. 使用AutoDllPlugin替代webpack.dllPlugin.
+2. 增加externals配置。
 
 打包详解->
 
