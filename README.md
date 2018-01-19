@@ -87,6 +87,11 @@
 1. 使用AutoDllPlugin替代webpack.dllPlugin.
 2. 增加externals配置。
 
+4.1.2
+
+1. 更新webpack-dev-server解决yarn打包错误的问题
+2. 修正dll打包路径错误
+
 打包详解->
 
 ## 开启组件异步加载(List组件)

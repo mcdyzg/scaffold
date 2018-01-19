@@ -137,7 +137,7 @@ module.exports = {
             inject: true, // will inject the DLL bundle to index.html
             debug: true,
             filename: '[name]-1.0.0.js',
-            path: './dist/static',
+            path: './static',
             plugins:[
                 new webpack.DefinePlugin({
                     'process.env': {

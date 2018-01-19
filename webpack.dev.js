@@ -125,7 +125,7 @@ module.exports = {
             inject: true, // will inject the DLL bundle to index.html
             debug: true,
             filename: '[name]-1.0.0.js',
-            path: './dist/static',
+            path: './static',
             plugins: [
                 new webpack.optimize.UglifyJsPlugin(),
                 // 如果不使用本插件，react将会打development环境的包
