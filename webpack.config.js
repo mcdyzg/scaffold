@@ -93,6 +93,12 @@ module.exports = {
         host:'0.0.0.0',
         port: 8084,                 //设置默认监听端口，如果省略，默认为8080
         historyApiFallback: true,   //在开发单页应用时非常有用，它依赖于HTML5 history API，如果设置为true，所有的跳转将指向index.html
+        // historyApiFallback: {
+        //     rewrites: [
+        //         { from: /^\/$/, to: 'index.html' },
+        //         { from: /^\/login/, to: '/login.html' },
+        //     ]
+        // },
         hot: true,                  //是否热部署
         quiet: false,               //让dev server处于静默的状态启动
         // contentBase:'./test',
@@ -127,6 +133,10 @@ module.exports = {
             filename: 'index.html',
             chunks: ['app','vendor'],
             // manifest:'dist/static/common-1.0.0.js',
+            // 本来dllPlugin插件打包的js是无法通过HtmlWebpackPlugin插件直接插入到html里的，解决方案是：在HtmlWebpackPlugin的options增加一个自定义配置项manifest，然后html里检测是否有此配置项
+            // <% if (htmlWebpackPlugin.options.manifest) { %>
+            //   <script type="text/javascript" src="<%=htmlWebpackPlugin.options.manifest %>"></script>
+            //   <% } %>
         }),
         // new webpack.DllReferencePlugin({
         //     // context: __dirname,
