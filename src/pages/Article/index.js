@@ -2,11 +2,15 @@ import React, {Component} from 'react'
 
 import {withRouter,Route,NavLink,Switch} from 'react-router-dom'
 import Bundle from '@modules/Bundle'
+import DynamicImport from '@modules/DynamicImport'
 
+
+// 异步加载方式一：使用bundle-loader，其实原理是使用webpack的require.ensure
 import ListC from 'bundle-loader?lazy&name=app-list!./List';
 // const List = Bundle(ListC)
 
-const List = Bundle(ListC)
+// 异步加载方式二：使用dynamic-import
+const List = DynamicImport(() => import(/* webpackChunkName: "List" */'./List'))
 
 
 
