@@ -86,8 +86,14 @@ module.exports = {
     watchOptions:{
         ignored: /node_modules/,
     },
-    // 会生成.map文件
-    // devtool: 'source-map',
+    // 如果想生成sourcemap需要UglifyJsPlugin.sourceMap设置为true。生产环境使用
+    /**    
+    Bug Display:
+        1. File name displayed correctly
+        2. Line number displayed correctly
+        3. The file referenced by the error: ./~/react-dnd/~/dnd-core/lib/index.js which is completely wrong
+    **/
+    devtool: 'cheap-module-source-map',
     plugins: [
         // new webpack.optimize.CommonsChunkPlugin({
         //     name:'vendor',                                  //将公共模块打包

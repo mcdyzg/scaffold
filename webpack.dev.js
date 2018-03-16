@@ -86,8 +86,14 @@ module.exports = {
     watchOptions:{
         ignored: /node_modules/,
     },
-    // 会生成.map文件
-    // devtool: 'source-map',
+    // 不会生成.map文件，直接放到了js里。测试环境使用
+    /** Bug Display:
+        1. File name displayed correctly
+        2. Line number displayed correctly (CreateLogForm.js?b337:37 I don't know what does the b337 portion stands for though)
+        3. The file referenced by the error: The original source code is displayed
+        http://cheng.logdown.com/posts/2016/03/25/679045
+    **/
+    devtool: 'cheap-module-eval-source-map',
     plugins: [
         // new webpack.optimize.CommonsChunkPlugin({
         //     name:'vendor',                                  //将公共模块打包

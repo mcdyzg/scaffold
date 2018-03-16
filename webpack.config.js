@@ -24,6 +24,7 @@ module.exports = {
         chunkFilename: '[name].[hash].js',
         // publicPath:'/'
     },
+    // 本地使用或者cheap-module-eval-source-map
     // devtool: 'inline-source-map',
     resolve: {
         extensions: [
